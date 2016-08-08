@@ -1,0 +1,13 @@
+
+<project-detail style="display:none;">
+    <button onclick={ history_back }>Return to the list</button>
+    <div>{ project.name }</div>
+    <div>{ project.description }</div>
+    <div>{ project.startdate }</div>
+    <div>{ project.enddate }</div>
+    <div>{ project.modified }</div>
+    <div>{ project.sectors }</div>
+    <div>{ project.organizations }</div>
+
+    {% include 'projecttracker/project_detail.tag.js' %}
+</project-detail>

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.utils.translation import gettext_noop
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -37,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
+
     'project_tracker',
+    'jsontag',
+    'library',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +80,26 @@ WSGI_APPLICATION = 'nhdb.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'gis',
+#         'USER': 'timor',
+#         'PASSWORD': 'timor',
+#         'HOST': '172.17.0.5',
+#         'PORT': '5432',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -104,7 +130,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+
+COUNTRY_CODE = 'TL'
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = (
+    ('tet', gettext_noop('Tetun')),
+    ('en', gettext_noop('English')),
+    ('pt', gettext_noop('Portugese')),
+    ('id', gettext_noop('Indonesian')),
+    )
+
+DATE_FORMATS = ['%d/%m/%Y', '%d/%m/%y']
 
 TIME_ZONE = 'UTC'
 

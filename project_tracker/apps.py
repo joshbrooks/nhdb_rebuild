@@ -1,5 +1,7 @@
+from __future__ import unicode_literals
+
 from django.apps import AppConfig
 
 
-class ProjectTrackerConfig(AppConfig):
-    name = 'project_tracker'
+class NationaldbConfig(AppConfig):
+    name = 'nationaldb'

@@ -1,0 +1,119 @@
+
+<project-list>
+
+    <form id="project-filter">
+        <div id="project-search-parameters" class="c-card c-card--high">
+              <div class="c-card__content c-card__content--divider heading">By Name</div>
+              <div class="c-card__item">
+                  <div class="o-grid">
+                      <div class="o-grid__cell"><label class="c-label c-form-element">Name contains:<input name="name" id="project_filter_name" class="c-field" placeholder="Name contains" ></label></div>
+                      <div class="o-grid__cell">        <label class="c-label c-form-element">
+            Project status:
+            <select class="c-choice" id="id_status" name="status" multiple="multiple">
+                {% for k, v in PROJECT_STATUS_CHOICES %}
+               <option value="{{k}}">{{v}}</option>
+                {% endfor %}
+            </select>
+        </label></div>
+                    </div>
+              </div>
+              <div class="c-card__item">From organization(s):<organization-search></organization-search> </div>
+              <div class="c-card__content c-card__content--divider heading">By Categories</div>
+              <div class="c-card__item"><project-sectors></project-sectors></div>
+              <div class="c-card__item"><project-activities></project-activities></div>
+              <div class="c-card__item"><project-beneficiaries></project-beneficiaries></div>
+        </div>
+
+
+        <div class="c-form-element">
+          <label class="c-label" for="project_filter_name">Name:</label>
+
+        </div>
+
+
+
+
+
+
+
+        <button class="c-button c-button--primary" onclick={ set_page }>filter</button>
+    </form>
+
+    <div class="c-pagination">
+        <div class="c-pagination__controls c-pagination__controls--backward">
+            <button class="c-pagination__control" onclick={ set_page } data-set-page=1>«</button>
+            <button class="c-pagination__control"onclick={ set_page } data-set-page={page - 1}>‹</button>
+            <button class="c-pagination__page c-pagination__page--current">{ page }</button>
+            <button class="c-pagination__control" onclick={set_page} data-set-page={page + 1}>›</button>
+            <button class="c-pagination__control" onclick={set_page} data-set-page={pages}>»</button>
+        </div>
+    </div>
+
+
+    <h4 class="c-heading c-heading--medium">Projects { (page -1 ) * page_size + 1 } to { Math.min(page * page_size, count) } of { count  }</h4>
+
+    <table class="c-table c-table--striped c-table--condensed">
+        <caption class="c-table__caption">Projects</caption>
+        <thead class="c-table__head"></thead>
+        <tbody>
+        <tr class="c-table__row c-table__row--heading">
+            <th class="c-table__cell">Project name</th>
+            <th class="c-table__cell">Status</th>
+            <th class="c-table__cell">Description</th>
+            <th class="c-table__cell">Start date</th>
+            <th class="c-table__cell">End date</th>
+            <th class="c-table__cell">Modified</th>
+            <th class="c-table__cell">Sectors</th>
+            <th class="c-table__cell">Beneficiaries</th>
+            <th class="c-table__cell">Activities</th>
+            <th class="c-table__cell">Organizations</th>
+            <th class="c-table__cell"></th>
+        </tr>
+
+
+        <tr class="c-table__row" each={ projects }>
+            <td class="c-table__cell">{ name }</td>
+            <td class="c-table__cell">{ status_display }</td>
+            <td class="c-table__cell">{ description }</td>
+            <td class="c-table__cell">{ startdate }</td>
+            <td class="c-table__cell">{ enddate }</td>
+            <td class="c-table__cell">{ modified }</td>
+            <td class="c-table__cell">
+                <virtual each={ tag } if={ group == 'Sector' }>{ description }<br></virtual>
+            </td>
+            <td class="c-table__cell">
+                <virtual each={ tag } if={ group == 'Beneficiary' }>{ description }</span><br></virtual>
+            </td>
+            <td class="c-table__cell">
+                <virtual each={ tag } if={ group == 'Activity' }>{ description }</span><br></virtual>
+            </td>
+            <td class="c-table__cell">
+                <virtual each={ organization }> { name }<br></virtual>
+            </td>
+            <td><button onclick={ parent.edit_project }>More</button></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <style scoped>
+        #project-search-parameters {overflow: visible}
+
+    </style>
+
+    {% include 'projecttracker/project_list.tag.js' %}
+
+</project-list>
+
+<project-sectors>
+    <rg-tags class="sector"></rg-tags>
+</project-sectors>
+<project-activities>
+    <rg-tags class="activity"></rg-tags>
+</project-activities>
+<project-beneficiaries>
+    <rg-tags class="beneficiary"></rg-tags>
+</project-beneficiaries>
+<organization-search>
+    <lookup-tag>
+    </lookup-tag>
+</organization-search>

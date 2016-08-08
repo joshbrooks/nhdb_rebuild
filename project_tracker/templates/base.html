@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">{%  block head %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+{% block head_script %}
+    <script src="{% static 'riot/riot+compiler.min.js' %}"></script>
+    <script src="{% static 'rg/dist/rg.min.js' %}"></script>
+    <script src="{% static 'RiotControl/riotcontrol.js' %}"></script>
+    <script src="{% static 'jquery-3.0.0.min/index.js' %}"></script>
+{%  endblock %}
+{%  block head_style %}
+    <link rel="stylesheet" href="{%  static '/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'blaze/dist/blaze.min.css' %}">
+{%  endblock %}
+
+
+</head>{%  endblock head %}
+    <body class="c-text">{%  block body %}
+        {%  include 'navbar.html' %}
+
+    <div class="o-container o-container--xlarge o-grid o-grid--wrap o-grid--top o-grid--small-full o-grid--medium-full">
+        <main class="o-grid__cell o-grid__cell--width-100">
+            {%  block main %}
+            {%  endblock main %}
+        </main>
+    </div>
+
+        {%  block body_script %}
+    <script>
+        riot.mount('rg-tags.sector', {
+          tags: {
+            placeholder: 'Choose Sectors',
+            filter: 'text', // <-- this enables filtering on the 'text' property
+            name: 'sector',
+            options: [{% for tag in filter.sector %}{text: '{{tag.description}}', id:'{{tag.id}}' }{% if not forloop.last %}, {% endif %}{% endfor %}]
+          }
+        })
+        riot.mount('rg-tags.activity', {
+          tags: {
+            placeholder: 'Choose Activities',
+            filter: 'text', // <-- this enables filtering on the 'text' property
+            name: 'activity',
+            options: [{% for tag in filter.activity %}{text: '{{tag.description}}', id:'{{tag.id}}'}{% if not forloop.last %}, {% endif %}{% endfor %}]
+          }
+        })
+        riot.mount('rg-tags.beneficiary', {
+          tags: {
+            placeholder: 'Choose Beneficiaries',
+            filter: 'text', // <-- this enables filtering on the 'text' property,
+            name: 'beneficiary',
+            options: [{% for tag in filter.beneficiary %}{text: '{{tag.description}}', id:'{{tag.id}}' }{% if not forloop.last %}, {% endif %}{% endfor %}]
+          }
+        })
+    </script>
+    {%  endblock body_script %}
+    </body>{%  endblock body %}
+
+
+
+</html>

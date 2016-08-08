@@ -1,0 +1,46 @@
+
+<lookup-tag>
+
+
+    <div class="c-tags">
+	  <span class="c-tags__container">
+	    <a each="{ opts.tags.tags }" onclick="{ removeTag }" class="c-button c-button--primary c-tag">
+				{ name }
+	      <span class="tag__close">×</span>
+	    </a>
+	  </span>
+
+      <select style="display:none;" name="{ opts.tags.name }" multiple="multiple" >
+        <option each="{ opts.tags.tags }" value="{id}" selected="selected"></option>
+      </select>
+
+      <div class="c-tags__field-container" style="position:relative;">
+			<input type="{ opts.tags.filter ? 'search' : 'text' }"
+						 name="selectfield"
+						 class="c-field"
+						 placeholder="{ opts.tags.placeholder }"
+						 onkeydown="{ navigate }"
+						 oninput="{ ajaxFilterOptions }"
+						 onfocus="{ open }"
+						 readonly="{ !opts.tags.filter }">
+
+			<ul class="c-menu c-menu--high" if="{ opts.tags.isvisible }">
+				<li each="{ options }" no-reorder
+						onclick="{ parent.select }"
+						class="c-menu__item { 'c-menu__item--active': selected, 'c-menu__item--disabled': disabled, 'c-menu__item--hover': active }">
+					{ name }
+				</li>
+			</ul>
+	  </div>
+
+    </div>
+
+    <style scoped>
+		.menu {
+			position: absolute;
+		}
+
+	</style>
+
+    {% include 'riot/ajax-tag.tag.js' %}
+</lookup-tag>

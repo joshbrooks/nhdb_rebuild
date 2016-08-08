@@ -1,0 +1,148 @@
+{% load i18n %}
+{#  Provides a RiotJS tag to view requests #}
+<request>
+
+    <div class="col col-lg-6 hidden">
+        <h3>{ message } <label class='badge'>{ requests.length }</label></h3>
+        <table class="table table-condensed">
+            <thead>
+                <tr><th>Code</th><th></th><th>Requests</th></tr>
+            </thead>
+            <tbody>
+                <tr each="{item,i in requestCounts.status}">
+                    <td>{ item }</td>
+                    <td>{ok: item == 200, created: item == 201, deleted: item == 204, bad-request: item >= 400 && item < 500, internal-server-error: item > 500, waiting: item == 'undefined' }</td>
+                    <td> <label class="badge">{i}</label></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-condensed">
+            <thead>
+                <tr><th>Method</th><th>Requests</th></tr>
+            </thead>
+            <tbody>
+                <tr each="{item,i in requestCounts.method}">
+                    <td>{ item }</td>
+                    <td> <label class="badge">{i}</label></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3> Request Monitoring</h3>
+
+                <p>Keeps a record of the requests which have been made, and the result.</p>
+                <p>If a request cannot be responded to by the server it can be shelved in local storage</p>
+
+            </div>
+        </div>
+
+        <h5>Show / Hide request types</h5>
+
+
+        <label> Live ?
+            <input type="checkbox" id="weAreLive"/>
+        </label>
+
+        <label> Filtering
+            <select name="filtering" onchange="{updateFiltering}">
+                <optgroup label="Type">
+                    <option value='all' selected="{filtering == 'all'}">Show All</option>
+                    <option value='waiting' selected="{filtering == 'waiting'}">Show waiting</option>
+                    <option value='success' selected="{filtering == 'success'}">Show success</option>
+                    <option value='failed' selected="{filtering == 'failed'}">Show failed</option>
+                </optgroup>
+                <optgroup label="Method">
+                    <option value='get' selected="{filtering == 'get'}">GET</option>
+                    <option value='put' selected="{filtering == 'put'}">PUT</option>
+                    <option value='post' selected="{filtering == 'post'}">POST</option>
+                    <option value='delete' selected="{filtering == 'delete'}">DELETE</option>
+                </optgroup>
+            </select>
+        </label>
+
+       <label> Clearing
+            <select name="clearing" onchange="{clearRequests}">
+                <optgroup label="Type">
+                    <option value='all' selected="{filtering == 'all'}">Remove All</option>
+                    <option value='waiting' selected="{filtering == 'waiting'}" disabled="disabled">Remove waiting</option>
+                    <option value='success' selected="{filtering == 'success'}" disabled="disabled">Remove success</option>
+                    <option value='failed' selected="{filtering == 'failed'}" disabled="disabled">Remove failed</option>
+                </optgroup>
+                <optgroup label="Method">
+                    <option value='get' selected="{filtering == 'get'}">Remove GET</option>
+                    <option value='put' selected="{filtering == 'put'}">Remove PUT</option>
+                    <option value='post' selected="{filtering == 'post'}">Remove POST</option>
+                    <option value='delete' selected="{filtering == 'delete'}">Remove DELETE</option>
+                </optgroup>
+            </select>
+        </label>
+
+
+        <h5>Request Management examples</h5>
+
+        <p>
+            <button onclick={ shelve_requests } class="btn btn-xs btn-primary">Cache</button>
+            <button onclick={ unshelve_requests } class="btn btn-xs btn-primary">Reload from Cache</button>
+            <button onclick={ clearSuccessfulRequests } class="btn btn-xs btn-primary">clearSuccessfulRequests</button>
+            <button onclick={ doAllRequests } class="btn btn-xs btn-primary">doAllRequests</button>
+        </p>
+
+
+        <table class="table table-condensed table-bordered">
+
+            <thead>
+                <tr><th>url</th><th>method</th><th>data</th><th>status</th><th>actions</th></tr>
+            </thead>
+            <tbody>
+                <tr class="request {hidden: hidden}" each={ requests }>
+                    <td>{ url }</td>
+                    <td>{ method }</td>
+                    <td>{ data }</td>
+                    <td class="http-status-code-{ok: status == 200, created: status == 201, deleted: status == 204, bad-request: status >= 400 && status < 500, internal-server-error: status > 500 }"> { status }</td>
+                    <td>
+                        <button disabled="{disabled: status > 199 && status < 400 || online_status == 'offline' }" onclick={ parent.request_do } class="btn btn-sm btn-primary">Make request</button>
+                        <button onclick={ parent.request_remove } class="btn btn-sm btn-primary">Remove request</button>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <style scoped>
+        :scope { font-size: 2rem }
+        h3 { color: #444 }
+        ul, p, table { font-size: 1rem }
+        li { list-style-type: none }
+
+        .panel.panel-default:hover {
+            border-color:red;
+        }
+
+        .person.edit .panel.panel-default {
+            border-color:green;
+        }
+        .http-status-code-ok {
+            color:green;
+        }
+        .http-status-code-created {
+            color:green;
+        }
+        .http-status-code-bad-request {
+            color:red;
+        }
+        .http-status-code-internal-server-error {
+            color:red;
+        }
+
+        .hidden {
+            display:none;
+        }
+    </style>
+
+    {% include 'riot/request.tag.html.js' %}
+
+</request>

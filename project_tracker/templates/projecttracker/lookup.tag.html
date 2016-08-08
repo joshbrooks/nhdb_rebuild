@@ -1,0 +1,15 @@
+
+<lookup-tag>
+    <div class="c-form-element">
+      <label class="c-label" for="project_filter_orgname">Organization:</label>
+        {opts.url}
+      <input name="orgname" id="project_filter_orgname" class="c-field" placeholder="Organization name" onInput={ ajaxFilterOptions } >
+        <ul class="c-menu c-menu--high">
+            <li class="c-menu__item" each="{results}" onclick={ tag_selected }>
+                { name }
+            </li>
+
+        </ul>
+    </div>
+    {% include 'projecttracker/lookup.tag.js' %}
+</lookup-tag>

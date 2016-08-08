@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON Viewer</title>
+    <script src="{% static 'jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'jquery-jsonview/dist/jquery.jsonview.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'jquery-jsonview/dist/jquery.jsonview.css' %}">
+    <script>
+        json = JSON.stringify({{ json }})
+        $(function(){
+
+            $('#json').JSONView(json)
+
+        });
+
+
+    </script>
+</head>
+    <body>
+        <h5> Simple JSON Viewer</h5>
+
+        <p id="json"></p>
+
+    </body>
+</html>
