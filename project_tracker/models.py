@@ -2,8 +2,10 @@ from django.contrib.contenttypes.fields import GenericRelation
 # from django.contrib.gis.db import models
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
 from .uuidencode import base64_to_uuid, uuid_to_base64
+from django.apps import apps
 
 from unidecode import unidecode
 import uuid
@@ -115,7 +117,25 @@ class Project(models.Model):
     # Links to JSON fields for more complicated relationships
     translation = GenericRelation('jsontag.Translation')
     contact = GenericRelation('jsontag.Contact')
-    tag = GenericRelation('jsontag.Tag')
+    tag = GenericRelation('jsontag.ObjectTag', related_query_name='project')
+
+    @classmethod
+    def category_counts_active(cls):
+        filter_params = {'objecttag__project__status':'A'}
+        return cls.category_counts(filter_params)
+
+    @classmethod
+    def category_counts(cls, filter_params = None):
+
+        tags = apps.get_model('jsontag.Tag').objects
+        if filter_params:
+            tags = tags.filter(**filter_params)
+        else:
+            tags = tags.filter(objecttag__project__status__isnull=False)
+        tags = tags\
+            .annotate(Count('objecttag__project')) \
+            .values_list('objecttag__tag_id__translation__translation', 'objecttag__project__count')
+        return tags
 
 class ProjectOrganization(models.Model):
 

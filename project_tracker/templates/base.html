@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">{%  block head %}
 <head>
@@ -22,6 +23,7 @@
 
     <div class="o-container o-container--xlarge o-grid o-grid--wrap o-grid--top o-grid--small-full o-grid--medium-full">
         <main class="o-grid__cell o-grid__cell--width-100">
+        {%  trans 'Hi' %}
             {%  block main %}
             {%  endblock main %}
         </main>

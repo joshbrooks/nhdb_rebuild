@@ -1,8 +1,8 @@
 import uuid
 
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import ManyToManyField
+from django.db.models import ManyToManyField, Count
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.postgres.fields import JSONField
@@ -53,8 +53,7 @@ class Tag(models.Model):
 
 class ObjectTag(models.Model):
 
-    object_id = models.UUIDField(primary_key=True)
+    object_id = models.UUIDField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     content_object = GenericForeignKey('content_type', 'object_id')
-
     tag_id = models.ForeignKey(Tag)

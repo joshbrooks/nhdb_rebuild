@@ -28,7 +28,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ObjectTag',
             fields=[
-                ('object_id', models.UUIDField(primary_key=True, serialize=False)),
+                ('object_id', models.UUIDField()),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType')),
             ],
         ),
