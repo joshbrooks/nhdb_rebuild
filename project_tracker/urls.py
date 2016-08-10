@@ -10,10 +10,7 @@ urlpatterns = [
 
     url(r'projects.(?P<response_format>[^/]+)', cache_page(60 * 5)(views.ProjectList.as_view())),
     url(r'organization.(?P<response_format>[^/]+)', cache_page(60 * 5)(views.OrganizationList.as_view())),
-    url(r'tags.(?P<response_format>[^/]+)', cache_page(60 * 5)(views.TagList.as_view())),
-
-
-
+    # url(r'tags.(?P<response_format>[^/]+)', cache_page(60 * 5)(views.TagList.as_view())),
 
     url(r'projects', views.ProjectList.as_view()),
 

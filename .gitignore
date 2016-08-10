@@ -95,3 +95,6 @@ ENV/
 
 .gitignore
 nhdb/__pycache__/
+
+bower_components
+node_modules

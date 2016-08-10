@@ -1,19 +1,58 @@
 import django_filters
-from django.utils.safestring import mark_safe
-
+from django.template.response import TemplateResponse
+from django.utils.safestring import mark_safe, SafeBytes
+from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView
-from django.views.generic.list import ListView
+from django.views.generic.list import ListView, BaseListView
 from django_filters.filters import UUIDFilter
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework import pagination
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from . import jsonh
 
-from .models import Organization, Project, Tag
+
+from jsontag.models import Tag
+from . import jsonh
+import json
+
+from .models import Organization, Project
 from .serializers import OrganizationSerializer, ProjectSerializer, ProjectSerializerForList, \
     OrganizationSerializerForList
+
+from django.http import HttpResponse, Http404
+
+
+class JSONHRenderer(JSONRenderer):
+    """
+    A renderer which returns the more compact HJson format
+    """
+
+    def render(self, data, indent=1, separators=None):
+        return jsonh.dumps(
+            data, cls=self.encoder_class,
+            indent=indent, ensure_ascii=self.ensure_ascii,
+        )
+
+
+class JSONResponse(HttpResponse):
+    """
+    An HttpResponse that renders its content into JSON.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
+
+
+class JSONHResponse(HttpResponse):
+    """
+    An HttpResponse that renders its content into JSON.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONHRenderer().render(data, indent=1)
+        kwargs['content_type'] = 'application/json'
+        super(JSONHResponse, self).__init__(content, **kwargs)
 
 
 class ResultsPagination(pagination.PageNumberPagination):
@@ -33,35 +72,58 @@ class ResultsPagination(pagination.PageNumberPagination):
             'results': data
         })
 
+
 class MultipleUUIDFilter(django_filters.MultipleChoiceFilter, django_filters.filters.UUIDFilter):
     def __init__(self, **kwargs):
         super(MultipleUUIDFilter, self).__init__(**kwargs)
 
+
 class JsonListView(ListView):
 
-    template_name = 'projecttracker/generic.json'
-    content_type = "application/json"
-    valid_formats = 'hjson','json','html'
+    valid_formats = 'jsonh','json','html', 'htmlh'
     serializer = None
+
+    def _get_serialized(self):
+        return self.serializer(self.queryset, many=True).data
 
     def get_context_data(self, *args, **kwargs):
         response_format = self.kwargs.get('response_format')
-        assert response_format in self.valid_formats
         if response_format == 'html':
-            self.content_type = "text/html"
-            self.template_name = 'projecttracker/generic.json.html'
+            return {'json': mark_safe(JSONRenderer().render(self._get_serialized()).decode())}
+        if response_format == 'htmlh':
+            return {'json': mark_safe(JSONHRenderer().render(self._get_serialized()))}
 
-        if response_format == 'hjson' or self.request.GET.get('hjson'):
-            json = mark_safe(jsonh.dumps(self.serializer(self.queryset, many=True).data))
+        return {'json': self._get_serialized()}
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        allow_empty = self.get_allow_empty()
+
+        if not allow_empty:
+            # When pagination is enabled and object_list is a queryset,
+            # it's better to do a cheap query than to load the unpaginated
+            # queryset in memory.
+            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
+                is_empty = not self.object_list.exists()
+            else:
+                is_empty = len(self.object_list) == 0
+            if is_empty:
+                raise Http404(_("Empty list and '%(class_name)s.allow_empty' is False.") % {
+                    'class_name': self.__class__.__name__,
+                })
+        context = self.get_context_data()
+        response_format = self.kwargs.get('response_format')
+
+        if response_format == 'html':
+            return TemplateResponse(request, 'projecttracker/generic.json.html', context )
+        elif response_format == 'htmlh':
+            return TemplateResponse(request, 'projecttracker/generic.jsonh.html', context)
+        elif response_format == 'jsonh':
+            return JSONHResponse(self._get_serialized(), content_type='application/json')
+        elif response_format == 'json':
+            return JSONResponse(self._get_serialized(), content_type='application/json')
         else:
-            json = mark_safe(JSONRenderer().render(self.serializer(self.queryset, many=True).data))
-
-        return {'json': json}
-
-
-class TagList(JsonListView):
-    queryset = Tag.objects.all()
-
+            raise AssertionError('Unhandled response type')
 
 class ProjectList(JsonListView):
     """
@@ -88,10 +150,11 @@ class ProjectFilter(django_filters.FilterSet):
     # tag = django_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all())
 
     # Specific filtering for different groups
-    activity = django_filters.ModelMultipleChoiceFilter(name='tag', queryset=Tag.objects.filter(group="Activity"))
-    beneficiary = django_filters.ModelMultipleChoiceFilter(name='tag', queryset=Tag.objects.filter(group="Beneficiary"))
-    sector = django_filters.ModelMultipleChoiceFilter(name='tag', queryset=Tag.objects.filter(group="Sector"))
+    activity = django_filters.ModelMultipleChoiceFilter(name='tag', queryset=Tag.objects.filter(group="ACT"))
+    beneficiary = django_filters.ModelMultipleChoiceFilter(name='tag', queryset=Tag.objects.filter(group="BEN"))
+    sector = django_filters.ModelMultipleChoiceFilter(name='tag', queryset=Tag.objects.filter(group="INV"))
     org_id = django_filters.ModelMultipleChoiceFilter(name='organization', queryset=Organization.objects.all())
+
 
     class Meta:
         model = Project
@@ -117,9 +180,9 @@ class HomePageView(TemplateView):
         context = super(HomePageView, self).get_context_data(**kwargs)
         context['PROJECT_STATUS_CHOICES'] = Project.PROJECT_STATUS_CHOICES
         context['filter'] = {
-            'activity': Tag.objects.filter(group = 'Activity').values('description', 'id'),
-            'sector': Tag.objects.filter(group = 'Sector').values('description', 'id'),
-            'beneficiary': Tag.objects.filter(group = 'Beneficiary').values('description', 'id'),
+            'activity': Tag.objects.filter(group = 'ACT'),
+            'sector': Tag.objects.filter(group = 'INV'),
+            'beneficiary': Tag.objects.filter(group = 'BEN'),
 
         }
 

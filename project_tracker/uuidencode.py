@@ -12,7 +12,8 @@ def base64_to_uuid(b64str):
 
 def uuid_to_base64(uuid_instance):
     bytes = uuid_instance.bytes
-    return base64.urlsafe_b64encode(bytes).strip('==')
+    encoded = base64.urlsafe_b64encode(bytes)
+    return encoded
 
 if __name__ == '__main__':
 

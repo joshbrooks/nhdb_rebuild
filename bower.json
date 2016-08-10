@@ -1,0 +1,25 @@
+{
+  "name": "nhdb",
+  "homepage": "https://github.com/joshbrooks/nhdb_rebuild",
+  "authors": [
+    "Joshua Brooks <josh.vdbroek@gmail.com>"
+  ],
+  "description": "Project / Organization tracking for development",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "riot": "^2.5.0",
+    "RiotControl": "riotcontrol#*",
+    "jquery": "^3.1.0",
+    "font-awesome": "^4.6.3",
+    "bootstrap": "^3.3.7",
+    "jquery-jsonview": "^1.2.3"
+  }
+}

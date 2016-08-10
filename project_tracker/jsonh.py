@@ -36,7 +36,7 @@ def loads(str, *args, **kwargs):
 
 def pack(dict_list):
     length = len(dict_list)
-    keys = length and dict_list[0].keys() or []
+    keys = length and list(dict_list[0].keys()) or []
     klength = len(keys)
     result = []
     i = 0

@@ -65,6 +65,7 @@ class Organization(models.Model):
     translation = GenericRelation('jsontag.Translation')
     contact = GenericRelation('jsontag.Contact')
     tag = GenericRelation('jsontag.Tag')
+    history = GenericRelation('suggest.Change')
 
 
 class Person(models.Model):
@@ -80,6 +81,7 @@ class Person(models.Model):
 
     modified = models.DateField(auto_now=True, null=True, blank=True)
     verified = models.DateField(null=True, blank=True)
+    history = GenericRelation('suggest.Change')
 
 
 class RecordOwner(models.Model):
@@ -118,6 +120,7 @@ class Project(models.Model):
     translation = GenericRelation('jsontag.Translation')
     contact = GenericRelation('jsontag.Contact')
     tag = GenericRelation('jsontag.ObjectTag', related_query_name='project')
+    history = GenericRelation('suggest.Change')
 
     @classmethod
     def category_counts_active(cls):
