@@ -164,7 +164,6 @@ class ProjectPerson(models.Model):
 
     PROJECT_PERSON_CHOICES = (
         ('P', 'Primary contact'),
-        ('-', ''),
     )
 
     class Meta:
@@ -173,7 +172,8 @@ class ProjectPerson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     project = models.ForeignKey(Project)
     person = models.ForeignKey(Person)
-    relationship = models.CharField(max_length=1, choices=PROJECT_PERSON_CHOICES)
+    relationship = models.CharField(max_length=1, choices=PROJECT_PERSON_CHOICES, null=True, blank=True)
+    verified = models.DateTimeField(null=True, blank=True)
 
 
 class ProjectPlace(models.Model):

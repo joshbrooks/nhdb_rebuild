@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
 
     'django_extensions',
-
+    #'debug_toolbar',  # not yet compat with 1.10
     'project_tracker',
     'jsontag',
     'library',
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',  # not yet compat with 1.10
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

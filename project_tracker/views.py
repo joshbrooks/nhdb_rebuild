@@ -1,27 +1,34 @@
 import django_filters
+from django.http import HttpResponse, Http404
 from django.template.response import TemplateResponse
-from django.utils.safestring import mark_safe, SafeBytes
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.views.decorators.gzip import gzip_page
 from django.views.generic import TemplateView
-from django.views.generic.list import ListView, BaseListView
-from django_filters.filters import UUIDFilter
-from rest_framework import generics
+from django.views.generic.list import ListView
 from rest_framework import filters
+from rest_framework import generics
 from rest_framework import pagination
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
-
 from jsontag.models import Tag
 from . import jsonh
-import json
+from . import serializers
+from .models import Organization, Project, Person
 
-from .models import Organization, Project
-from .serializers import OrganizationSerializer, ProjectSerializer, ProjectSerializerForList, \
-    OrganizationSerializerForList
 
-from django.http import HttpResponse, Http404
-
+def gz(content):
+    from io import BytesIO, StringIO
+    import gzip
+    if not isinstance(content, bytes):
+        content = content.encode()
+    zbuf = BytesIO()
+    zfile = gzip.GzipFile(mode='wb', compresslevel=6, fileobj=zbuf)
+    zfile.write(content)
+    zfile.close()
+    compressed_content = zbuf.getvalue()
+    return compressed_content
 
 class JSONHRenderer(JSONRenderer):
     """
@@ -39,21 +46,36 @@ class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
     """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
+
+    def __init__(self, data, compress=False, media_type="application/json; indent=4", **kwargs):
+
+        self.headers = {}
+        content = JSONRenderer().render(data, accepted_media_type=media_type)
+        if compress:
+            content = gz(content)
         kwargs['content_type'] = 'application/json'
+
         super(JSONResponse, self).__init__(content, **kwargs)
+
+        if compress:
+            self['Content-Encoding'] = 'gzip'
+            self['Content-Length'] = str(len(content))
 
 
 class JSONHResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
     """
-    def __init__(self, data, **kwargs):
+    def __init__(self, data, compress=False, **kwargs):
         content = JSONHRenderer().render(data, indent=1)
+        if compress:
+            content = gz(content)
         kwargs['content_type'] = 'application/json'
         super(JSONHResponse, self).__init__(content, **kwargs)
 
+        if compress:
+            self['Content-Encoding'] = 'gzip'
+            self['Content-Length'] = str(len(content))
 
 class ResultsPagination(pagination.PageNumberPagination):
     page_size = 100
@@ -83,17 +105,18 @@ class JsonListView(ListView):
     valid_formats = 'jsonh','json','html', 'htmlh'
     serializer = None
 
-    def _get_serialized(self):
+    @property
+    def ser_data(self):
         return self.serializer(self.queryset, many=True).data
 
     def get_context_data(self, *args, **kwargs):
         response_format = self.kwargs.get('response_format')
         if response_format == 'html':
-            return {'json': mark_safe(JSONRenderer().render(self._get_serialized()).decode())}
+            return {'json': mark_safe(JSONRenderer().render(self.ser_data).decode())}
         if response_format == 'htmlh':
-            return {'json': mark_safe(JSONHRenderer().render(self._get_serialized()))}
-
-        return {'json': self._get_serialized()}
+            return {'json': mark_safe(JSONHRenderer().render(self.ser_data))}
+        else:
+            return self.ser_data
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -115,23 +138,26 @@ class JsonListView(ListView):
         response_format = self.kwargs.get('response_format')
 
         if response_format == 'html':
-            return TemplateResponse(request, 'projecttracker/generic.json.html', context )
+            return TemplateResponse(request, 'projecttracker/generic.json.html', context=context )
         elif response_format == 'htmlh':
-            return TemplateResponse(request, 'projecttracker/generic.jsonh.html', context)
+            return TemplateResponse(request, 'projecttracker/generic.jsonh.html', context=context)
         elif response_format == 'jsonh':
-            return JSONHResponse(self._get_serialized(), content_type='application/json')
+            return JSONHResponse(context, compress=True)
         elif response_format == 'json':
-            return JSONResponse(self._get_serialized(), content_type='application/json')
+            response = JSONResponse(context, compress=True)
+
+            return response
         else:
             raise AssertionError('Unhandled response type')
+
 
 class ProjectList(JsonListView):
     """
     Return a list of projects; if a "modified-after" date is specified return only projects
     created or modified after a certain date
     """
-    queryset = Project.objects.all().prefetch_related('tag', 'organization')
-    serializer = ProjectSerializerForList
+    queryset = Project.objects.all().prefetch_related('tag', 'organization', 'projectperson_set', 'person')
+    serializer = serializers.ProjectSerializer
 
 
 class OrganizationList(JsonListView):
@@ -140,8 +166,13 @@ class OrganizationList(JsonListView):
     created or modified after a certain date
     """
     queryset = Organization.objects.all().prefetch_related('project_set')
-    serializer = OrganizationSerializerForList
+    serializer = serializers.OrganizationSerializer
 
+
+class PersonList(JsonListView):
+
+    queryset = Person.objects.all().prefetch_related('project_set').prefetch_related('organization')
+    serializer = serializers.PersonSerializer
 
 
 class ProjectFilter(django_filters.FilterSet):
@@ -191,14 +222,14 @@ class HomePageView(TemplateView):
 
 class OrganizationListAPI(generics.ListCreateAPIView):
     queryset = Organization.objects.all()
-    serializer_class = OrganizationSerializer
+    serializer_class = serializers.OrganizationSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class=OrganizationFilter
     pagination_class=ResultsPagination
 
 class ProjectListAPI(generics.ListAPIView):
     queryset = Project.objects.prefetch_related('tag','organization')
-    serializer_class = ProjectSerializer
+    serializer_class = serializers.ProjectSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class=ProjectFilter
     pagination_class=ResultsPagination
@@ -207,4 +238,4 @@ class ProjectListAPI(generics.ListAPIView):
 class ProjectDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     # queryset = Project.objects.all()
     queryset = Project.objects.prefetch_related('tag','organization')
-    serializer_class = ProjectSerializer
+    serializer_class = serializers.ProjectSerializer

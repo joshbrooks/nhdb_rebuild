@@ -61,3 +61,7 @@ FROM
   WHERE project_id = nhdb_project.id
   AND nhdb_propertytag.id = project_tags.propertytag_id;
 
+CREATE OR REPLACE VIEW export_person_project AS (
+    SELECT person.uuid, project.uuid FROM nhdb_person per, nhdb_project pro, nhdb_projectperson perpro WHERE
+      perpro.person_id = per.id AND nhdb_projectperson.project_id = pro.id
+)

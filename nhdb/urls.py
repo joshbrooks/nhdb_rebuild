@@ -16,7 +16,16 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from nhdb import settings
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^nhdb/', include('project_tracker.urls')),
 ]
+# TODO
+# Not yet compatible with 1.10
+# if settings.DEBUG:
+#     import debug_toolbar
+#     urlpatterns += [
+#         url(r'^__debug__/', include(debug_toolbar.urls)),
+#     ]
