@@ -1,54 +1,63 @@
 {% extends "base.html" %}
+{% load js_reverse %}
 
 {% load static %}
 
 {%  block head_script %}
     {{ block.super }}
-    <script src="{% static 'js/uuid_encode.js' %}"></script>
     <script src="{% static 'js/projectstore.js' %}"></script>
     <script src="{% static 'js/requeststore.js' %}"></script>
+    <script src="{% static 'js/translationstore.js' %}"></script>
     <script>
         {% include 'projecttracker/routing.js' %}
     </script>
+
+
+<script type="text/javascript" charset="utf-8">
+{% js_reverse_inline %}
+</script>
 {% endblock %}
 
 {% block head_style %}
 {% endblock %}
 
-{% block main %}
+{% block body %}
+{{ block.super }}
 <project-detail></project-detail>
+
 <project-list></project-list>
+
 <request></request>
 
-{% endblock main %}
-{%  block body_script %}
+{% endblock body %}
+{%  block js_after_body %}
+{{ block.super }}
+<script type="riot/tag">
+{% include 'projecttracker/project_list.tag.html' %}
+</script>
+<script type="riot/tag">
+{% include 'projecttracker/project_detail.tag.html' %}
+</script>
+<script type="riot/tag">
+{% include 'riot/request.tag.html' %}
+</script>
 
-<script type="riot/tag">
-    {% include 'projecttracker/project_list.tag.html' %}
-</script>
-<script type="riot/tag">
-    {% include 'projecttracker/project_detail.tag.html' %}
-</script>
-<script type="riot/tag">
-    {% include 'riot/request.tag.html' %}
-</script>
+
+
 
 <script>
-    var projects = [] //{{ projects|safe }}
+{#    var projects = [] //{{ projects|safe }}#}
     var projectstore = new ProjectStore([]);
-    var requeststore = new RequestStore([]);
+    var translationstore = new TranslationStore();
+    RiotControl.addStore(translationstore);
+    RiotControl.trigger('load_translations');
+{#    var requeststore = new RequestStore([]);#}
     RiotControl.addStore(projectstore);
-    RiotControl.addStore(requeststore);
-    riot.mount('request');
+{#    RiotControl.addStore(requeststore);#}
+{#    riot.mount('request');#}
     riot.mount('project-list');
     riot.mount('project-detail');
-    riot.mount('lookup-tag', {url: "{% url 'projecttracker:api-organization-list' %}", minlength:2, filterfield:'name',
-        tags:{
-            options:[],
-             placeholder:"Pick organization",
-             filter:'text',
-            name: 'org_id'
-    }});
-    RiotControl.trigger('projects_reload');
+riot.route.start()
+riot.route.exec()
 </script>
 {% endblock %}

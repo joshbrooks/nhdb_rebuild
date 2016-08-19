@@ -5,8 +5,9 @@ import calendar
 from django.utils import six
 from rest_framework.fields import Field, UUIDField
 
+from jsontag.models import Tag, ObjectTag
 from project_tracker.uuidencode import uuid_to_base64, base64_to_uuid
-from .models import Organization, OrganizationPlace, Project, ProjectPlace, Person, ProjectPerson
+from .models import Organization, OrganizationPlace, Project, ProjectPlace, Person, ProjectPerson, ProjectOrganization
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -59,20 +60,45 @@ class ProjectPersonRelationSerializer(serializers.ModelSerializer):
         fields = ('person','relationship')
 
 
+class ProjectOrganizationRelationSerializer(serializers.ModelSerializer):
+    # id = Base64UUIDField()
+    organization = OrganizationRelationSerializer()
+    class Meta:
+        model = ProjectOrganization
+        fields = ('organization','projectorganization')
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('translation_id',)
+
+
+class ObjectTagSerializer(serializers.ModelSerializer):
+    tag = TagSerializer()
+    class Meta:
+        model = ObjectTag
+        fields=('tag',)
+
+
 class ProjectSerializer(serializers.ModelSerializer):
+
+    class TagField(Field):
+        def to_representation(self, value):
+            return value.values_list('tag__translation_id', flat=True)
+
+        def to_internal_value(self, data):
+            pass
 
     startdate = serializers.DateField(format='iso-8601')
     enddate = serializers.DateField(format='iso-8601')
-    organization = OrganizationRelationSerializer(many=True, read_only=True)
-    status_display = serializers.SerializerMethodField()
-    # projectperson_set = ProjectPersonRelationSerializer(many=True, read_only=True)
+    projectorganization_set = ProjectOrganizationRelationSerializer(many=True, read_only=True)
+    projectperson_set = ProjectPersonRelationSerializer(many=True, read_only=True)
+    tag = ObjectTagSerializer(many=True)
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'status', 'status_display', 'description', 'fulltimestaff', 'parttimestaff', 'startdate', 'enddate', 'organization', 'projectperson_set')
-
-    def get_status_display(self, project):
-        return project.get_status_display()
+        fields = ('verified', 'modified','id', 'tag','name', 'status', 'description', 'fulltimestaff', 'parttimestaff', 'startdate', 'enddate', 'projectorganization_set', 'projectperson_set')
 
 
 class ProjectSerializerForList(serializers.ModelSerializer):
@@ -81,6 +107,7 @@ class ProjectSerializerForList(serializers.ModelSerializer):
     """
     id = Base64UUIDField()
     organization = OrganizationRelationSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Project

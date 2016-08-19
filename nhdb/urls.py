@@ -20,7 +20,10 @@ from nhdb import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^nhdb/', include('project_tracker.urls')),
+    url(r'^nhdb/', include('project_tracker.urls', namespace='nhdb')),
+    url(r'^jt/', include('jsontag.urls', namespace='jsontag')),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
 # TODO
 # Not yet compatible with 1.10

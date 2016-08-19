@@ -30,6 +30,3 @@ class Change(models.Model):
     modified = models.DateField(null=True, blank=True, auto_now=True)
 
     state = models.CharField(max_length=2, choices=STATE_OPTIONS)
-
-
-

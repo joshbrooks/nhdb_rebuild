@@ -56,4 +56,4 @@ class ObjectTag(models.Model):
     object_id = models.UUIDField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     content_object = GenericForeignKey('content_type', 'object_id')
-    tag_id = models.ForeignKey(Tag)
+    tag = models.ForeignKey(Tag)

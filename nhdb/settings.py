@@ -41,15 +41,17 @@ INSTALLED_APPS = [
     'django.contrib.gis',
 
     'django_extensions',
-    #'debug_toolbar',  # not yet compat with 1.10
+    'debug_toolbar',  # not yet compat with 1.10
+    'django_js_reverse',
+
     'project_tracker',
     'jsontag',
     'library',
     'suggest',
 ]
 
-MIDDLEWARE = [
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',  # not yet compat with 1.10
+MIDDLEWARE_CLASSES = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # not yet compat with 1.10
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -59,6 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'nhdb.urls'
 
@@ -103,7 +107,7 @@ DATABASES = {
         'NAME': 'gis',
         'USER': 'timor',
         'PASSWORD': 'timor',
-        'HOST': '172.17.0.3',
+        'HOST': '172.17.0.4',
         'PORT': '5432',
     }
 }
@@ -173,5 +177,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "bower_components"),
     os.path.join(BASE_DIR, "node_modules"),
-    '/var/www/static/',
 ]

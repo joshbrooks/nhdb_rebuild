@@ -42,6 +42,7 @@ class JSONHRenderer(JSONRenderer):
         )
 
 
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
@@ -50,7 +51,7 @@ class JSONResponse(HttpResponse):
     def __init__(self, data, compress=False, media_type="application/json; indent=4", **kwargs):
 
         self.headers = {}
-        content = JSONRenderer().render(data, accepted_media_type=media_type)
+        content = JSONRenderer().render(data)
         if compress:
             content = gz(content)
         kwargs['content_type'] = 'application/json'
@@ -58,7 +59,7 @@ class JSONResponse(HttpResponse):
         super(JSONResponse, self).__init__(content, **kwargs)
 
         if compress:
-            self['Content-Encoding'] = 'gzip'
+            self['content-encoding'] = 'gzip'
             self['Content-Length'] = str(len(content))
 
 
@@ -122,6 +123,7 @@ class JsonListView(ListView):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
 
+
         if not allow_empty:
             # When pagination is enabled and object_list is a queryset,
             # it's better to do a cheap query than to load the unpaginated
@@ -135,16 +137,19 @@ class JsonListView(ListView):
                     'class_name': self.__class__.__name__,
                 })
         context = self.get_context_data()
-        response_format = self.kwargs.get('response_format')
+
+        if 'gzip' in request.META.get('HTTP_ACCEPT_ENCODING', ''):
+            compress=True
+        response_format = self.kwargs.get('response_format', 'json')
 
         if response_format == 'html':
             return TemplateResponse(request, 'projecttracker/generic.json.html', context=context )
         elif response_format == 'htmlh':
             return TemplateResponse(request, 'projecttracker/generic.jsonh.html', context=context)
         elif response_format == 'jsonh':
-            return JSONHResponse(context, compress=True)
+            return JSONHResponse(context, compress=compress)
         elif response_format == 'json':
-            response = JSONResponse(context, compress=True)
+            response = JSONResponse(context, compress=compress)
 
             return response
         else:
@@ -156,7 +161,7 @@ class ProjectList(JsonListView):
     Return a list of projects; if a "modified-after" date is specified return only projects
     created or modified after a certain date
     """
-    queryset = Project.objects.all().prefetch_related('tag', 'organization', 'projectperson_set', 'person')
+    queryset = Project.objects.all().prefetch_related('tag', 'tag__tag', 'tag__tag__translation', 'organization', 'projectperson_set__person', 'projectorganization_set__organization')
     serializer = serializers.ProjectSerializer
 
 
@@ -203,12 +208,12 @@ class OrganizationFilter(django_filters.FilterSet):
 
 
 
-class HomePageView(TemplateView):
+class Main(TemplateView):
 
     template_name = "projecttracker/homepage.html"
 
     def get_context_data(self, **kwargs):
-        context = super(HomePageView, self).get_context_data(**kwargs)
+        context = super(Main, self).get_context_data(**kwargs)
         context['PROJECT_STATUS_CHOICES'] = Project.PROJECT_STATUS_CHOICES
         context['filter'] = {
             'activity': Tag.objects.filter(group = 'ACT'),

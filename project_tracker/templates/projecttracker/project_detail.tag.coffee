@@ -2,7 +2,6 @@ self = this
 self.message = "Projects"
 self.project = undefined
 
-
 self.on 'mount', ->
   return
 
@@ -17,11 +16,10 @@ self.project_list = () ->
   RiotControl.trigger 'load_project_list'
 
 RiotControl.on 'load_project_detail', (project) ->
-    self.load_project project
+  console.log project
+  self.load_project project
+
 
 RiotControl.on 'load_project_list', () ->
   $('project-list').show()
   $('project-detail').hide()
-
-self.history_back = () ->
-  history.go(-1)

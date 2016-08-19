@@ -23,6 +23,7 @@
   };
 
   RiotControl.on('load_project_detail', function(project) {
+    console.log(project);
     return self.load_project(project);
   });
 
@@ -31,8 +32,6 @@
     return $('project-detail').hide();
   });
 
-  self.history_back = function() {
-    return history.go(-1);
-  };
-
 }).call(this);
+
+//# sourceMappingURL=project_detail.tag.js.map
