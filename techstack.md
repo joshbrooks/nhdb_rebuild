@@ -1,7 +1,8 @@
 <!--
---- Readme.md Snippet without images Start ---
+&lt;--- Readme.md Snippet without images Start ---&gt;
 ## Tech Stack
 joshbrooks/nhdb_rebuild is built on the following main stack:
+
 - [Python](https://www.python.org) – Languages
 - [Django](https://www.djangoproject.com/) – Frameworks (Full Stack)
 - [jQuery](http://jquery.com/) – Javascript UI Libraries
@@ -11,11 +12,13 @@ joshbrooks/nhdb_rebuild is built on the following main stack:
 - [Font Awesome](https://fontawesome.com/) – Fonts
 
 Full tech stack [here](/techstack.md)
---- Readme.md Snippet without images End ---
 
---- Readme.md Snippet with images Start ---
+&lt;--- Readme.md Snippet without images End ---&gt;
+
+&lt;--- Readme.md Snippet with images Start ---&gt;
 ## Tech Stack
 joshbrooks/nhdb_rebuild is built on the following main stack:
+
 - <img width='25' height='25' src='https://img.stackshare.io/service/993/pUBY5pVj.png' alt='Python'/> [Python](https://www.python.org) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/994/4aGjtNQv.png' alt='Django'/> [Django](https://www.djangoproject.com/) – Frameworks (Full Stack)
 - <img width='25' height='25' src='https://img.stackshare.io/service/1021/lxEKmMnB_400x400.jpg' alt='jQuery'/> [jQuery](http://jquery.com/) – Javascript UI Libraries
@@ -25,14 +28,15 @@ joshbrooks/nhdb_rebuild is built on the following main stack:
 - <img width='25' height='25' src='https://img.stackshare.io/service/3244/1_Mr1Fy00XjPGNf1Kkp_hWtw_2x.png' alt='Font Awesome'/> [Font Awesome](https://fontawesome.com/) – Fonts
 
 Full tech stack [here](/techstack.md)
---- Readme.md Snippet with images End ---
+
+&lt;--- Readme.md Snippet with images End ---&gt;
 -->
 <div align="center">
 
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [joshbrooks/nhdb_rebuild](https://github.com/joshbrooks/nhdb_rebuild)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|14<br/>Tools used|11/09/23 <br/>Report generated|
+|14<br/>Tools used|01/04/24 <br/>Report generated|
 |------|------|
 </div>
 
@@ -135,13 +139,13 @@ Full tech stack [here](/techstack.md)
 
 |NAME|VERSION|LAST UPDATED|LAST UPDATED BY|LICENSE|VULNERABILITIES|
 |:------|:------|:------|:------|:------|:------|
-|[bitstring](https://pypi.org/bitstring)|v3.1.5|08/09/16|Joshua Brooks |MIT|N/A|
-|[django-debug-toolbar](https://pypi.org/django-debug-toolbar)|N/A|08/11/16|Joshua Brooks |BSD-3-Clause|N/A|
-|[django-filter](https://pypi.org/django-filter)|v0.13.0|08/11/16|Joshua Brooks |BSD-3-Clause|[CVE-2020-15225](https://github.com/advisories/GHSA-x7gm-rfgv-w973) (High)|
-|[djangorestframework](https://pypi.org/djangorestframework)|v3.3.3|08/11/16|Joshua Brooks |BSD-3-Clause|[](https://github.com/advisories/GHSA-57h7-r3q3-w57j) (Moderate)<br/>[CVE-2020-25626](https://github.com/advisories/GHSA-fx83-3ph3-9j2q) (Moderate)|
-|[psycopg2](https://pypi.org/psycopg2)|v2.6.1|08/08/16|Joshua Brooks |BSD-3-Clause-Attribution|N/A|
+|[bitstring](https://pypi.org/project/bitstring)|v3.1.5|08/09/16|Joshua Brooks |MIT|N/A|
+|[django-debug-toolbar](https://pypi.org/project/django-debug-toolbar)|N/A|08/11/16|Joshua Brooks |BSD-3-Clause|N/A|
+|[django-filter](https://pypi.org/project/django-filter)|v0.13.0|08/11/16|Joshua Brooks |BSD-3-Clause|[CVE-2020-15225](https://github.com/advisories/GHSA-x7gm-rfgv-w973) (High)|
+|[djangorestframework](https://pypi.org/project/djangorestframework)|v3.3.3|08/11/16|Joshua Brooks |BSD-3-Clause|[](https://github.com/advisories/GHSA-57h7-r3q3-w57j) (Moderate)<br/>[CVE-2020-25626](https://github.com/advisories/GHSA-fx83-3ph3-9j2q) (Moderate)|
+|[psycopg2](https://pypi.org/project/psycopg2)|v2.6.1|08/08/16|Joshua Brooks |BSD-3-Clause-Attribution|N/A|
 
 <br/>
 <div align='center'>
 
-Generated via [Stack File](https://github.com/apps/stack-file)
+Generated via [Stack File](https://github.com/marketplace/stack-file)
