@@ -1,7 +1,8 @@
 repo_name: joshbrooks/nhdb_rebuild
 report_id: 0353defa85c3a70a248be75f7a28dde9
+version: 0.1
 repo_type: Public
-timestamp: '2023-11-09T23:22:50+00:00'
+timestamp: '2024-01-04T15:17:08+00:00'
 requested_by: joshbrooks
 provider: github
 branch: master
@@ -16,6 +17,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1178/slQydAMv.png
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild
   detection_source: Repo Metadata
 - name: Python
   description: A clear and powerful object-oriented programming language, comparable
@@ -26,6 +28,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild
   detection_source: Repo Metadata
 - name: SQL
   description: It is a domain-specific language used in programming
@@ -35,7 +38,8 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/2271/default_068d33483bba6b81ee13fbd4dc7aab9780896a54.png
-  detection_source: migration/migration.sql
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/migration/migrate_in.sql
+  detection_source: migration/migrate_in.sql
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-09 05:54:17.000000000 Z
 - name: Bootstrap
@@ -49,7 +53,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Front-End Frameworks
   image_url: https://img.stackshare.io/service/1101/C9QJ7V3X.png
-  detection_source_url: bower.json
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/bower.json
   detection_source: bower.json
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-10 15:47:05.000000000 Z
@@ -62,6 +66,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Frameworks (Full Stack)
   image_url: https://img.stackshare.io/service/994/4aGjtNQv.png
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-11 04:00:25.000000000 Z
@@ -75,7 +80,7 @@ tools:
   category: Libraries
   sub_category: Javascript UI Libraries
   image_url: https://img.stackshare.io/service/1021/lxEKmMnB_400x400.jpg
-  detection_source_url: bower.json
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/bower.json
   detection_source: bower.json
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-10 15:47:05.000000000 Z
@@ -87,6 +92,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild
   detection_source: Repo Metadata
 - name: PyPI
   description: A repository of software for the Python programming language
@@ -96,6 +102,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Hosted Package Repository
   image_url: https://img.stackshare.io/service/12572/-RIWgodF_400x400.jpg
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-08 15:53:56.000000000 Z
@@ -108,13 +115,13 @@ tools:
   category: Design
   sub_category: Fonts
   image_url: https://img.stackshare.io/service/3244/1_Mr1Fy00XjPGNf1Kkp_hWtw_2x.png
-  detection_source_url: bower.json
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/bower.json
   detection_source: bower.json
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-10 15:47:05.000000000 Z
 - name: bitstring
   description: Simple construction
-  package_url: https://pypi.org/bitstring
+  package_url: https://pypi.org/project/bitstring
   version: 3.1.5
   license: MIT
   open_source: true
@@ -122,27 +129,28 @@ tools:
   category: Libraries
   sub_category: PyPI Packages
   image_url: https://img.stackshare.io/package/20286/default_e7371996f4d5cb0bf54948a99b306e1decefbc7c.png
-  detection_source_url: requirements.txt
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-09 05:54:17.000000000 Z
 - name: django-debug-toolbar
   description: A configurable set of panels that display various debug information
     about the current request/response
-  package_url: https://pypi.org/django-debug-toolbar
+  package_url: https://pypi.org/project/django-debug-toolbar
   license: BSD-3-Clause
   open_source: true
   hosted_saas: false
   category: Libraries
   sub_category: PyPI Packages
   image_url: https://img.stackshare.io/package/20671/default_d50ff54d48cd87d57b8eda5d2d945fe31fb2ac8a.png
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-11 04:00:25.000000000 Z
 - name: django-filter
   description: Django-filter is a reusable Django application for allowing users to
     filter querysets dynamically
-  package_url: https://pypi.org/django-filter
+  package_url: https://pypi.org/project/django-filter
   version: 0.13.0
   license: BSD-3-Clause
   open_source: true
@@ -150,7 +158,7 @@ tools:
   category: Libraries
   sub_category: PyPI Packages
   image_url: https://img.stackshare.io/package/20158/default_31f4acd7a71628261771488a4d0f37f63bff1598.png
-  detection_source_url: requirements.txt
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-11 04:00:25.000000000 Z
@@ -163,7 +171,7 @@ tools:
     first_patched: 2.4.0
 - name: djangorestframework
   description: Web APIs for Django, made easy
-  package_url: https://pypi.org/djangorestframework
+  package_url: https://pypi.org/project/djangorestframework
   version: 3.3.3
   license: BSD-3-Clause
   open_source: true
@@ -171,7 +179,7 @@ tools:
   category: Libraries
   sub_category: PyPI Packages
   image_url: https://img.stackshare.io/package/19870/default_d05f6f09935776629f62e8aed365805502c14921.png
-  detection_source_url: requirements.txt
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-11 04:00:25.000000000 Z
@@ -190,7 +198,7 @@ tools:
     first_patched: 3.11.2
 - name: psycopg2
   description: Psycopg2 - Python-PostgreSQL Database Adapter
-  package_url: https://pypi.org/psycopg2
+  package_url: https://pypi.org/project/psycopg2
   version: 2.6.1
   license: BSD-3-Clause-Attribution
   open_source: true
@@ -198,7 +206,7 @@ tools:
   category: Libraries
   sub_category: PyPI Packages
   image_url: https://img.stackshare.io/package/20416/default_64aa60b33468d1d28611966765867676f6303b64.png
-  detection_source_url: requirements.txt
+  detection_source_url: https://github.com/joshbrooks/nhdb_rebuild/blob/master/requirements.txt
   detection_source: requirements.txt
   last_updated_by: Joshua Brooks
   last_updated_on: 2016-08-08 15:53:56.000000000 Z
